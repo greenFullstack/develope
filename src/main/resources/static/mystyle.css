@@ -1,0 +1,25 @@
+/* mystyle.css */
+/* *{
+	background-color:beige;
+}
+table{
+	background-color:skyblue;
+	border:1px solid gray;
+	width: 100%;
+}
+th,td,tr{
+	border:1px solid gray;
+	padding:5px;
+} */
+.page-item.active .page-link{
+	background-color:orange;
+	border-color:orange;
+}
+.page-link {
+	color:orange;
+}
+.page-link:hover{
+	color:white;
+	background-color:gray;
+}
+

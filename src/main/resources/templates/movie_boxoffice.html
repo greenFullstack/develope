@@ -1,0 +1,113 @@
+<!-- login_form.html -->
+<html layout:decorate="~{layout}">
+<div layout:fragment="content" class="container">
+	<div class="jumbotron text-center">
+		<h2 class="display-4">일별 영화 박스 오피스</h2>
+		
+	</div>
+	<div id="result">
+		
+		
+		<table class="table table-hover">
+			<thead>
+			<tr class="text-center">
+				<th scope="col">순위</th>
+				<th scope="col">포스터</th>
+				<th scope="col">영화명</th>
+				<th scope="col">개봉일</th>
+				<th scope="col">누적관객수</th>
+				<th scope="col">누적매출액</th>
+			</tr>
+			</thead>
+			<tbody class="table-body">
+				<!--ajax 데이터 가져올 부분-->
+			</tbody>
+		</table>
+		
+		
+		
+	</div>
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	
+	<script src="http://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+	<script layout:fragment="script">
+		$(function (){
+			let result = $("#result");
+			//result.load("https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=82ca741a2844c5c180a208137bb92bd7&targetDt=20240808");
+			
+			let urlValue = "https://kobis.or.kr/kobisopenapi/webservice/rest/boxoffice/searchDailyBoxOfficeList.json?key=82ca741a2844c5c180a208137bb92bd7&targetDt="+getDate();
+			
+			//페이지가 열리자마자 json이 들어오도록 (외부에서 가져올 때)
+			$(window).on("load", function (){
+				getJSON();
+			})
+			
+			function getJSON(){
+				//ajax 활용해서 비동기 http get요청
+				$.ajax({
+					type: "get",
+					url:urlValue,
+					dataType: "json",
+					// data : data,
+					success: function (data){
+						console.log("AJAX 통신 성공!");
+						console.log(data);
+						
+						let list = data.boxOfficeResult.dailyBoxOfficeList;
+						let str = "";
+						$.each(list, function (i) {
+							str += `
+										<tr>
+										<td>${list[i].rank}</td>
+										<td>
+											<img src="/img/movies/${list[i].movieCd}.jpg" width="80">
+										</td>
+										<td>${list[i].movieNm}</td>
+										<td>${list[i].openDt}</td>
+										<td class="text-right">${priceToString(list[i].audiAcc)} 명</td>
+										<td class="text-right">${priceToString(list[i].salesAcc)} 원</td>
+										</tr>
+									`
+						})
+						
+						$(".table-body").append(str);
+						//$("#result").text(str);
+						//$("#result").text($("#result").text()+"\n"+data.boxOfficeResult.dailyBoxOfficeList[0].movieNm);
+					},
+					error: function (){
+						console.log("AJAX  통신 실패.....")
+					}
+				});
+			}
+			
+			function getDate(){
+				let date = new Date();
+				let yyyy = date.getFullYear();
+				let mm = date.getMonth()+1;
+				let dd = date.getDate()-3;
+				
+				if (mm<10) mm = "0"+mm;
+				if (dd<10) dd = "0"+dd;
+				
+				let today = yyyy+""+mm+""+dd;
+				console.log(today);
+				return today;
+			}
+			
+			function priceToString(price){
+				return price.toString().replace(/\B(?=(\d{3})+(?!\d))/g, ",");
+			}
+			
+		})
+	</script>
+</div>
+</html>

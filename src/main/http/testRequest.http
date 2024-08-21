@@ -1,0 +1,13 @@
+### 테스트 api
+GET http://localhost:8080/user/signup
+
+### signup test
+POST http://localhost:8080/user/signup
+
+{
+"username":"user04",
+"password":"1234",
+"email":"user04@test.com"
+}
+
+
